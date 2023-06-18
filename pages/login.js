@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useRouter } from 'next/router'
+
+import { useAuthContext } from '../hooks/useAuthContext'
+import Alerta from '../components/Alerta'
 
 export default function Login() {
+
+  const router = useRouter()
+  const { autenticarUsuario, authState: { mensaje, autenticado } } = useAuthContext();
+
+  useEffect(() => {
+    if(autenticado){
+      router.push('/')
+    }
+  }, [autenticado])
+    
 
     const formik = useFormik({
     initialValues: {
@@ -13,13 +27,15 @@ export default function Login() {
       email: Yup.string().email('El email no es válido').required('El email es obligatario'),
       password: Yup.string().required('El password es obligatorio')
     }),
-    onSubmit: () => {
-      console.log('enviando formulario')
+    onSubmit: (datos) => {
+      autenticarUsuario(datos)
     }
   })
   return (
     <div className='md:w-4/5 xl:w-3/5 mx-auto'>
-    <h2 className='text-4xl font-sans font-bold text-gray-800 text-center'>Crear cuenta</h2>
+    <h2 className='text-4xl font-sans font-bold text-gray-800 text-center'>Iniciar sesión</h2>
+
+    {  mensaje && <Alerta mensaje={mensaje} />  }
     
     <div className="flex justify-center mt-3">
       <div className="w-full max-w-lg ">
@@ -73,7 +89,7 @@ export default function Login() {
           <input
             type='submit'
             className='bg-red-500 hover:bg-red-800 w-full p-3 text-white uppercase font-bold transition-colors cursor-pointer'
-            value='Crear cuenta'
+            value='Iniciar sesión'
           />
         </form>
       </div>
