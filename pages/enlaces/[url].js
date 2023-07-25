@@ -1,5 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 import { clienteAxios } from '../../config/axios'
 import variables from '../../config/variables';
 import { useAppContext } from '../../hooks/useAppContext';
@@ -21,7 +22,10 @@ export async function getServerSideProps({ params: { url } }){
 };
 
 export default function({ url }) {
-  const { archivo, nombreOriginal, password } = url ?? {};
+  const { archivo, nombreOriginal, password, descargas } = url ?? {};
+  const [ cantidadDescargasPermitidas, setCantidadDescargasPermitidas ] = useState(descargas ?? 0)
+  console.log(cantidadDescargasPermitidas)
+  const router = useRouter()
   const { verificarClaveEnlace, claveVerificada, mensaje } = useAppContext();
   const refPassword = useRef()
   
@@ -30,6 +34,16 @@ export default function({ url }) {
     if(!refPassword.current.value)return
 
     verificarClaveEnlace({ url: archivo, password: refPassword.current.value })
+  };
+
+  const obtenerArchivo = () => {
+    if(cantidadDescargasPermitidas > 1){
+      setCantidadDescargasPermitidas(count => count - 1)
+      router.push(`${variables.URL_BACK}/api/archivos/${archivo}`)
+    } else {
+      router.push(`${variables.URL_BACK}/api/archivos/${archivo}`)
+      setCantidadDescargasPermitidas(count => count - 1)
+    }
   }
   return (
     <div className='grid place-content-center md:w-4/5 xl:w-3/5 mx-auto md:shadow-lg bg-white rounded-lg py-10 px-5'>
@@ -70,13 +84,15 @@ export default function({ url }) {
                 {
                   (password && claveVerificada) && <p className='mt-2 text-center font-medium text-red-800 text-lg'>¡Excelente! La clave coincide y puedes continuar!</p>
                 }
-                <p className='mb-5 text-center mt-3'>¡Por favor descárgalo!</p>
-                <a
-                    className='bg-black hover:bg-red-700 transition-colors p-3 text-white text-center rounded-md w-1/2 mx-auto'
-                    href={`${variables.URL_BACK}/api/archivos/${archivo}`}
+                <p className='mb-5 text-center mt-3'>{ cantidadDescargasPermitidas ? '¡Por favor descárgalo!' : 'Este archivo superó el límite de descargas y no se puede descargar más.' }</p>
+                <button
+                    className={`bg-black transition-colors p-3 text-white text-center rounded-md w-1/2 mx-auto ${!cantidadDescargasPermitidas ? 'cursor-not-allowed' : 'hover:bg-red-700'}`}
+                    onClick={obtenerArchivo}
+                    disabled={!cantidadDescargasPermitidas}
+                    // href={`${variables.URL_BACK}/api/archivos/${archivo}`}
                 >
                     {nombreOriginal}
-                </a>
+                </button>
                 </>
               )
             }
