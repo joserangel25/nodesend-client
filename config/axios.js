@@ -1,5 +1,7 @@
 import axios from 'axios'
+import variables from './variables'
 
 export const clienteAxios = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+  baseURL: `${variables.URL_BACK}/api`,
+
 })

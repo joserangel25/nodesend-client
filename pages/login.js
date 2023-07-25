@@ -9,11 +9,18 @@ import Alerta from '../components/Alerta'
 export default function Login() {
 
   const router = useRouter()
-  const { autenticarUsuario, authState: { mensaje, autenticado } } = useAuthContext();
+  const { autenticarUsuario, authState: { mensaje, autenticado, usuario } } = useAuthContext();
 
   useEffect(() => {
-    if(autenticado){
+
+    if(autenticado && !mensaje){
       router.push('/')
+    }
+
+    if(autenticado && mensaje){
+      setTimeout(() => {
+        router.push('/')
+      }, 1200)
     }
   }, [autenticado])
     

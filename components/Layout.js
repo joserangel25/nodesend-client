@@ -8,7 +8,10 @@ export default function Layout({children}) {
   const { esUsuarioAutenticado } = useAuthContext()
 
   useEffect(() => {
-    esUsuarioAutenticado()
+    const token = sessionStorage.getItem('nodeSendToken')
+    if(token){
+      esUsuarioAutenticado()
+    }
   }, [])
   
   return (

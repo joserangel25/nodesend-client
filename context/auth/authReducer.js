@@ -1,3 +1,4 @@
+import { tokenAuth } from "../../config/tokenAuth";
 import { REGISTRO_EXITOSO,
          REGISTRO_ERROR,
          LIMPIAR_MENSAJE,
@@ -17,15 +18,19 @@ export default (state, action) => {
         mensaje: action.payload
       };
     case INICIO_SESION_EXITOSO:
-      sessionStorage.setItem('nodeSendToken', action.payload.token)
+      sessionStorage.setItem('nodeSendToken', action.payload.token);
+      tokenAuth()
       return {
         ...state,
         autenticado: true,
-        usuario: action.payload
+        token: action.payload.token,
+        usuario: action.payload,
+        mensaje: 'Ha iniciado sesión de forma correcta'
       }
     case USUARIO_AUTENTICADO:
       return {
         ...state,
+        autenticado: true,
         usuario: action.payload
       }
     case CERRAR_SESION: 
@@ -33,8 +38,8 @@ export default (state, action) => {
       return {
         ...state,
         usuario: null,
-        token: null,
-        autenticado: null
+        token: '',
+        autenticado: false
       }
     default: 
       return state

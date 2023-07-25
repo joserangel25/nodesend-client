@@ -58,6 +58,7 @@ const AuthProvider = ({children}) => {
         type: INICIO_SESION_EXITOSO,
         payload: data
       })
+      // tokenAuth()
     } catch (error) {
       console.log(error)
       dispatch({
@@ -76,16 +77,16 @@ const AuthProvider = ({children}) => {
   }
 
   const esUsuarioAutenticado = async () => {
-    const token = sessionStorage.getItem('nodeSendToken')
-    if(token){
-      tokenAuth(token)
-    }
+    tokenAuth();
+
     try {
       const { data } = await clienteAxios.get('/auth')
-      dispatch({
-        type: USUARIO_AUTENTICADO,
-        payload: data.usuario
-      })
+      if(data?.usuario){
+        dispatch({
+          type: USUARIO_AUTENTICADO,
+          payload: data.usuario
+        })
+      }
     } catch (error) {
       console.log(error)
       dispatch({
@@ -96,10 +97,9 @@ const AuthProvider = ({children}) => {
       //limpiar el estado mensaje
       setTimeout(() => {
         dispatch({
-          type: LIMPIAR_MENSAJE,
-          payload: ''
+          type: LIMPIAR_MENSAJE
         })
-      }, 5000);
+      }, 1000);
     }
   };
 
@@ -107,6 +107,7 @@ const AuthProvider = ({children}) => {
     dispatch({
       type: CERRAR_SESION
     })
+    tokenAuth()
   }
 
   return (

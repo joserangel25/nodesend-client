@@ -1,14 +1,28 @@
 import React from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useAuthContext } from '../hooks/useAuthContext'
+import { useAppContext } from '../hooks/useAppContext'
 
 export default function Header() {
-  const { authState, cerrarSesion } = useAuthContext()
+  const { authState, cerrarSesion } = useAuthContext();
+  const { reiniciarState } = useAppContext()
+  const router = useRouter();
+
+  const handleClikLogoRedirect = () => {
+    router.push('/')
+    reiniciarState()
+  }
   return (
     <header className='py-4 flex flex-col md:flex-row items-center justify-between'>
-      <Link href='/'>
-        <img src="logo.svg" alt="Logotipo de la página React NodeSend" className='w-64 mb-8 md:mb-0 inline-block'/>
-      </Link>
+
+      <img 
+       onClick={handleClikLogoRedirect}
+       src="/logo.svg" 
+       alt="Logotipo de la página React NodeSend" 
+       className='w-64 mb-8 md:mb-0 inline-block cursor-pointer'
+      />
+
 
       {
         authState?.usuario ? (
