@@ -22,12 +22,12 @@ export async function getServerSideProps({ params: { url } }){
 };
 
 export default function({ url }) {
+
+  const router = useRouter();
+  const refPassword = useRef();
+  const { verificarClaveEnlace, claveVerificada, mensaje } = useAppContext();
   const { archivo, nombreOriginal, password, descargas } = url ?? {};
   const [ cantidadDescargasPermitidas, setCantidadDescargasPermitidas ] = useState(descargas ?? 0)
-  console.log(cantidadDescargasPermitidas)
-  const router = useRouter()
-  const { verificarClaveEnlace, claveVerificada, mensaje } = useAppContext();
-  const refPassword = useRef()
   
   const handleSubmitVerificarClave = (e) => {
     e.preventDefault()
@@ -44,9 +44,13 @@ export default function({ url }) {
       router.push(`${variables.URL_BACK}/api/archivos/${archivo}`)
       setCantidadDescargasPermitidas(count => count - 1)
     }
-  }
+  };
+
   return (
-    <div className='grid place-content-center md:w-4/5 xl:w-3/5 mx-auto md:shadow-lg bg-white rounded-lg py-10 px-5'>
+    <div className='w-screen'>
+      <div 
+        className='grid place-content-center md:w-4/5 xl:w-3/5 mx-auto md:shadow-lg bg-white rounded-lg py-10 px-5'
+      >
         {
           mensaje && <Alerta mensaje={mensaje}/>
         }
@@ -118,6 +122,7 @@ export default function({ url }) {
           )
         }
     </div>
+  </div>
   )
 }
 

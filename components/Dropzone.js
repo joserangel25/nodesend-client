@@ -5,33 +5,37 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import Formulario from './Formulario';
 
 export default function MyDropzone() {
-  const { subirArchivo, cargando, error, crearEnlaceImage } = useAppContext();
+  const { subirArchivo, cargando, error, crearEnlaceImage, mostrarMensajeAlerta } = useAppContext();
   const { authState } = useAuthContext();
   const { autenticado } = authState ?? {}
 
   const onDrop = useCallback( async (acceptedFiles) => {
-    const formData = new FormData();
-    formData.append('archivo', acceptedFiles[0]);
-    subirArchivo({ file: formData, nombreOriginal: acceptedFiles[0]?.name})
+    if(acceptedFiles.length){
+      const formData = new FormData();
+      formData.append('archivo', acceptedFiles[0]);
+      subirArchivo({ file: formData, nombreOriginal: acceptedFiles[0]?.name})
+    } else {
+      mostrarMensajeAlerta('😢Solo puedes subir un solo archivo. ¡Intenta nuevamente!')
+    }
   }, []);
   // Extraer contenido de Dropzone
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 });
 
   const archivos = acceptedFiles.map((archivo) => (
-    <li key={archivo.lastModified} className='bg-white flex-1 p-3 mb-4 shadow-lg rounded'>
+    <li key={archivo.lastModified} className='bg-white p-3 shadow-lg rounded-md'>
       <p className='font-bold text-lg'>{archivo.path}</p>
-      <p className='text-sm text-gray-500'>{ (archivo.size / Math.pow(1024, 2)).toFixed(2) } MB</p>
+      <p className='text-sm text-gray-500'>Pesa { (archivo.size / Math.pow(1024, 2)).toFixed(2) } MB</p>
     </li>
   ));
 
   return (
-    <div className={`p-10 lg:py-0 md:flex-1 mb-3 lg:mt-0 flex flex-col items-center justify-center border-dashed ${isDragActive ? 'border-green-400' : 'border-gray-400'} border-2 bg-gray-100 `}>
+    <div className={`mb-3 flex flex-col gap-5 items-center justify-center border-dashed ${isDragActive ? 'border-green-400' : 'border-gray-400'} border-2 bg-gray-100 p-5 w-full lg:w-1/2`}>
       {
         acceptedFiles.length > 0 ? 
         (
           <>
-            <h2 className='text-xl font-bold text-red-500 mb-2'>Tus archivos subidos</h2>
-            <ul>{archivos}</ul>
+            <h2 className='text-center text-xl font-bold text-red-500'>Este es el archivo que vas a compartir:</h2>
+            <ul className='w-full md:w-1/2 text-center'>{archivos}</ul>
             {
               (cargando && !error) && (<p>Subiendo...</p>)
             }
@@ -46,7 +50,7 @@ export default function MyDropzone() {
               (!cargando && !error) &&
               (
                 <button
-                  className='bg-blue-700 w-full py-3 rounded-lg text-white mt-2 hover:bg-blue-800 transition-colors'
+                  className='bg-blue-700 p-3 rounded-lg text-white hover:bg-blue-800 transition-colors w-full md:w-2/3'
                   onClick={crearEnlaceImage}
                 >
                   Crear enlace
@@ -58,9 +62,9 @@ export default function MyDropzone() {
         )
         :
         (
-          <div {...getRootProps({ className: 'dropzone' })} className='cursor-pointer h-full w-full grid place-content-center'>
-            <input type="text" className='' {...getInputProps()} />
-            <p className='lg:text-2xl text-gray-600 text-center'>
+          <div {...getRootProps({ className: 'dropzone' })} className='cursor-pointer h-24 md:h-40 lg:h-full w-full grid place-content-center'>
+            <input type="text" className='w-full' {...getInputProps()} />
+            <p className='lg:text-xl text-gray-600 text-center hover:text-red-600'>
               { isDragActive ? '¡Suéltalo aquí!' : '¡Selecciona un archivo o arrástralo aquí!' }
             </p>
           </div>

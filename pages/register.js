@@ -25,17 +25,17 @@ export default function CrearCuenta() {
     }
   })
   return (
-    <div className='md:w-4/5 xl:w-3/5 mx-auto'>
-      <h2 className='text-4xl font-sans font-bold text-gray-800 text-center'>Crear cuenta</h2>
+    <div className='w-screen'>
+      <h2 className='text-lg leading-tight md:text-2xl font-sans font-bold text-gray-800 text-center w-full md:w-1/2 mx-auto'>😉¡Crea una cuenta para más beneficios!</h2>
       
       {
         mensaje && <Alerta mensaje={mensaje} />
       }
 
-      <div className="flex justify-center mt-3">
-        <div className="w-full max-w-lg ">
+      <div className="flex justify-center mt-6">
+        <div className="md:w-4/5 xl:w-3/5 px-5 mx-auto">
           <form 
-            className='bg-white rounded shadow-md px-8 py-6'
+            className='bg-white rounded-lg shadow-md px-8 py-6'
             onSubmit={formik.handleSubmit}
           >
             <div className="mb-4">

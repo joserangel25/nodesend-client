@@ -22,14 +22,14 @@ export default function Formulario() {
             <input 
               type="number" 
               placeholder="Coloca el número límite de descargas"
-              className="px-3 py-1 grow outline-none rounded-md"
+              className="px-3 py-1 grow outline-none rounded-md  shadow-md"
               onChange={(e) => cambioCantidadDescargasArchivo(Number(e.target.value))}
             />
           )
         }
       </div>
 
-      <div className="flex items-center gap-3 h-10 mt-2">
+      <div className="flex items-center gap-3 h-10">
         <label htmlFor="clave">¿Cifrar con clave?</label>
         <input 
           type="checkbox" 
@@ -42,7 +42,7 @@ export default function Formulario() {
             <input 
               type="password" 
               placeholder="Escribe la contraseña"
-              className="px-3 py-1 grow outline-none rounded-md"
+              className="px-3 py-1 grow outline-none rounded-md shadow-md"
               onChange={(e) => cambioClaveArchivo(e.target.value)}
             />
           )

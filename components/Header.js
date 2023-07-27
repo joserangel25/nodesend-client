@@ -14,13 +14,13 @@ export default function Header() {
     reiniciarState()
   }
   return (
-    <header className='py-4 flex flex-col md:flex-row items-center justify-between'>
+    <header className='md:w-4/5 xl:w-3/5 p-5 mx-auto flex flex-col md:flex-row items-center justify-between'>
 
       <img 
        onClick={handleClikLogoRedirect}
        src="/logo.svg" 
        alt="Logotipo de la página React NodeSend" 
-       className='w-64 mb-8 md:mb-0 inline-block cursor-pointer'
+       className='w-64 inline-block cursor-pointer'
       />
 
 
@@ -38,8 +38,25 @@ export default function Header() {
         ) :
         (
           <nav className='flex gap-2'>
-            <Link href='/login' className='bg-red-500 p-2 rounded-md text-white font-bold'>Log In</Link>
-            <Link href='/register' className='bg-black p-2 rounded-md text-white font-bold'>Sign Up</Link>
+            {
+              !router.pathname.includes('login') && (
+                <Link 
+                  href='/login' 
+                  className='bg-red-500 hover:bg-red-800 transition-colors p-2 rounded-md text-white font-bold'>
+                    Log In
+                </Link>
+              )
+            }
+            {
+              !router.pathname.includes('register') && (
+                <Link 
+                  href='/register' 
+                  className='bg-black hover:bg-gray-700 transition-colors p-2 rounded-md text-white font-bold'>
+                    Sign Up
+                </Link>
+              )
+            }
+            
           </nav>
         )
       }

@@ -19,8 +19,8 @@ export default function Layout({children}) {
       <Head>
         <title>React NodeSend</title>
       </Head>
-      <div className="bg-gray-100 py-4 min-h-screen">
-        <div className="container mx-auto">
+      <div className="bg-gray-100 min-h-screen grid place-content-center w-full">
+        <div className="">
           <Header />
           <main className="">
             {children}
