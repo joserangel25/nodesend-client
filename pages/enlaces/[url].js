@@ -21,7 +21,7 @@ export async function getServerSideProps({ params: { url } }){
   }
 };
 
-export default function({ url }) {
+export default function Url({ url }) {
 
   const router = useRouter();
   const refPassword = useRef();
